@@ -2,8 +2,66 @@ import java.util.*;
 
 public class Google {
 	public static void main(final String[] args) {
-		findSum();
+		//findSum();
+		testBraces();
 	}
+
+	/* Method that tests brace validation */
+	private static void testBraces() {
+		Set<String> braceSet = new HashSet<String>();
+		{
+			braceSet.add("{}");
+			braceSet.add("[");
+			braceSet.add(" ");
+			braceSet.add("");
+			braceSet.add("][");
+			braceSet.add("{[}]");
+			braceSet.add("({[]}{[]})");
+		}
+		for(String braces : braceSet)
+			System.out.println(braces + " is valid? " + validSet(braces));
+	}
+
+	/* Method that finds out as to whether or not a String of braces
+	 * is valid
+	 *
+	 * @param b The braces to look at 
+	 * @return String<Braces>.isValid ? true : false */
+	private static boolean validSet(String braces) {
+		if(braces.length() <= 1) return false;		
+		Stack<Character> s = new Stack<Character>();
+		for(int i = 0; i < braces.length(); i++) {
+			char c = braces.charAt(i);
+			// check for opening
+			if(c == '{' || c == '(' || c == '[')
+				s.push(c);
+			else if (c == '}' || c == ']' || c == ')') {
+				if(s.isEmpty()) return false;
+				char temp = s.pop();
+				if(!isMatch(temp, c)) return false;
+			} 
+		}
+		return s.isEmpty() ? true : false;
+	}
+
+	/* Checks to see if two braces correspond 
+	 *
+	 * @param o The opening brace
+	 * @param c The closing brace
+	 * @return o <--> c ? true : false */
+	private static boolean isMatch(char o, char c) {
+		switch(o) {
+			case '(':
+				return c == ')' ? true : false;
+			case '{':
+				return c == '}' ? true : false;
+			case '[':
+				return c == ']' ? true : false;
+			default:
+				return false;
+		}
+	}
+
 
 	private static void findSum() {
 		int a[] = {1, 2, 3, 4, 4, 5};
@@ -54,7 +112,8 @@ public class Google {
 	/* Returns the number representing the length of the longest common substring */
 	private static int longestCommonSubstring(String first, String second) {
 		int l[][] = new int[first.length()][second.length()];
-		int iMax = jMax = 0;
+		int iMax = 0;
+		int jMax = 0;
 		for(int i = 0; i < first.length(); i++) 
 			l[i][0] = 0;
 		for(int j = 0; j < second.length(); j++) 
